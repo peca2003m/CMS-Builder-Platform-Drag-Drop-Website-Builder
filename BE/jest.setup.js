@@ -1,0 +1,9 @@
+process.env.NODE_ENV = 'test';
+process.env.DB_HOST = 'localhost';
+process.env.DB_PORT = '5432';
+process.env.DB_NAME = 'cms_test';
+process.env.DB_USER = 'postgres';
+process.env.DB_PASSWORD = 'postgres';
+process.env.JWT_SECRET = 'test_secret_key_123';
+process.env.PORT = '5001';
+process.env.CORS_ORIGIN = 'http://localhost:3000';

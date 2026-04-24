@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: cms_db
+    restart: always
+    environment:
+      POSTGRES_DB: cms
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - cms_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ../BE
+      dockerfile: Dockerfile
+    container_name: cms_backend
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/cms
+      JWT_SECRET: your_jwt_secret_key_change_in_production
+      PORT: 5000
+      NODE_ENV: development
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ../BE:/app
+      - /app/node_modules
+    networks:
+      - cms_network
+
+  frontend:
+    build:
+      context: ../FE
+      dockerfile: Dockerfile
+    container_name: cms_frontend
+    restart: always
+    environment:
+      VITE_API_URL: http://localhost:5000/api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../FE:/app
+      - /app/node_modules
+    networks:
+      - cms_network
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+
+networks:
+  cms_network:
+    driver: bridge
