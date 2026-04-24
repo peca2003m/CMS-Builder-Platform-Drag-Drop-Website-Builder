@@ -93,5 +93,5 @@ jobs:
 
       - name: Build Summary
         run: |
-          echo "✅ Backend image: ${{ secrets.DOCKER_USERNAME }}/cms-backend:latest"
-          echo "✅ Frontend image: ${{ secrets.DOCKER_USERNAME }}/cms-frontend:latest"
+          echo "Backend image: ${{ secrets.DOCKER_USERNAME }}/cms-backend:latest"
+          echo "Frontend image: ${{ secrets.DOCKER_USERNAME }}/cms-frontend:latest"
